@@ -1,5 +1,68 @@
+# Fisierele pentru ASP.NET / Visual Studio
+.vscode/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.ncrunchproject
+*.ncrunchsolution
+_ReSharper*/ 
+*.ReSharper 
+*_ReSharper.Caches/ 
+*.DotSettings.user
+.idea/
+.idea/*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
 bin/
+Bin/
 obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+Obj/
+# Fisiere pentru React / Node.js
+node_modules/
+dist/
+build/
+
+# Fisierele de configurare sensibile
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Fisierele cache generate de npm/yarn
+.yarn/
+.pnp.*
+.pnp.js
+.pnp.cjs
+.pnp.data.json
+.yarn-integrity
+.yarn-error.log
+package-lock.json
+yarn.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fisiere temporare
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Fisiere de configurare care pot diferi între utilizatori
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
