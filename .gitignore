@@ -66,3 +66,6 @@ Thumbs.db
 *.user
 *.userosscache
 *.sln.docstates
+
+# Migration files from Domain
+Migrations/

@@ -48,8 +48,8 @@ export function JwtSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: '@demo1',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -67,7 +67,7 @@ export function JwtSignInView() {
       await signInWithPassword({ email: data.email, password: data.password });
       await checkUserSession?.();
 
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(error);
       setErrorMsg(typeof error === 'string' ? error : error.message);
@@ -92,7 +92,7 @@ export function JwtSignInView() {
         <Field.Text
           name="password"
           label="Password"
-          placeholder="6+ characters"
+          placeholder="••••••••"
           type={password.value ? 'text' : 'password'}
           InputLabelProps={{ shrink: true }}
           InputProps={{
@@ -124,7 +124,7 @@ export function JwtSignInView() {
   return (
     <>
       <FormHead
-        title="Sign in to your account"
+        title="Sign in to your account!!"
         description={
           <>
             {`Don’t have an account? `}
@@ -135,12 +135,6 @@ export function JwtSignInView() {
         }
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
-
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use <strong>{defaultValues.email}</strong>
-        {' with password '}
-        <strong>{defaultValues.password}</strong>
-      </Alert>
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>

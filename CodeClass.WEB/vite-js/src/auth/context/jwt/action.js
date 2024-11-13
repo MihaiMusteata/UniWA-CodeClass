@@ -28,14 +28,17 @@ export const signInWithPassword = async ({ email, password }) => {
 /** **************************************
  * Sign up
  *************************************** */
-export const signUp = async ({ email, password, firstName, lastName }) => {
+export const signUp = async ({ email, password, firstName, lastName, role, userName}) => {
   const params = {
-    email,
-    password,
     firstName,
     lastName,
+    email,
+    password,
+    role,
+    userName
   };
 
+    console.log('params:', params)
   try {
     const res = await axios.post(endpoints.auth.signUp, params);
 
