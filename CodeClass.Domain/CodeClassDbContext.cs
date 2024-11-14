@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CodeClass.Domain;
 
-public class CodeClassContext : IdentityDbContext<UserData>
+public class CodeClassDbContext : IdentityDbContext<UserData>
 {
-    public CodeClassContext()
+    public CodeClassDbContext()
     {
     }
 
-    public CodeClassContext(DbContextOptions<CodeClassContext> options) : base(options)
+    public CodeClassDbContext(DbContextOptions<CodeClassDbContext> options) : base(options)
     {
     }
 

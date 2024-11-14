@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CodeClass.BusinessLogic.Services.Authentication;
+using CodeClass.BusinessLogic.Services.Course;
 using CodeClass.Domain;
 using CodeClass.Domain.Identity;
 using CodeClass.Domain.User;
@@ -17,16 +18,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 
-builder.Services.AddDbContext<CodeClassContext>(options =>
+builder.Services.AddDbContext<CodeClassDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddIdentity<UserData, IdentityRole>()
-    .AddEntityFrameworkStores<CodeClassContext>()
+    .AddEntityFrameworkStores<CodeClassDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<IdentityUserManager>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 
 builder.Services.AddAuthentication(options =>

@@ -7,23 +7,23 @@ namespace CodeClass.Domain.Identity;
 
 public class IdentityUserManager : UserManager<UserData>
 {
-    private CodeClassContext _databaseContext { get; set; }
+    private CodeClassDbContext DatabaseDbContext { get; set; }
 
     public IdentityUserManager(IUserStore<UserData> store, IOptions<IdentityOptions> optionsAccessor,
         IPasswordHasher<UserData> passwordHasher, IEnumerable<IUserValidator<UserData>> userValidators,
         IEnumerable<IPasswordValidator<UserData>> passwordValidators, ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<UserData>> logger,
-        CodeClassContext databaseContext)
+        CodeClassDbContext databaseDbContext)
         : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors,
             services, logger)
     {
-        _databaseContext = databaseContext;
+        DatabaseDbContext = databaseDbContext;
     }
     
     public override async Task<IdentityResult> CreateAsync(UserData user, string password)
     {
         var errors = new List<IdentityError>();
-        var emailTaken = _databaseContext.Users.FirstOrDefault(u => u.Email == user.Email);
+        var emailTaken = DatabaseDbContext.Users.FirstOrDefault(u => u.Email == user.Email);
         if (emailTaken != null)
         {
             errors.Add(new IdentityError
