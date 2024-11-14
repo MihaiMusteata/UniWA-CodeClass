@@ -3,6 +3,7 @@ using System.Text;
 using CodeClass.BusinessLogic.Services.Authentication;
 using CodeClass.BusinessLogic.Services.Course;
 using CodeClass.BusinessLogic.Services.Lesson;
+using CodeClass.BusinessLogic.Services.LessonQuiz;
 using CodeClass.Domain;
 using CodeClass.Domain.Identity;
 using CodeClass.Domain.User;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IdentityUserManager>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<ILessonQuizService, LessonQuizService>();
 
 
 builder.Services.AddAuthentication(options =>
