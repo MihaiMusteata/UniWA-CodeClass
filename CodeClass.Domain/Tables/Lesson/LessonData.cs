@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CodeClass.Domain.Tables.Course;
-using CodeClass.Domain.Tables.Document;
 
 namespace CodeClass.Domain.Tables.Lesson;
 

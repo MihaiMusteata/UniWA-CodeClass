@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CodeClass.BusinessLogic.Services.Authentication;
 using CodeClass.BusinessLogic.Services.Course;
+using CodeClass.BusinessLogic.Services.Lesson;
 using CodeClass.Domain;
 using CodeClass.Domain.Identity;
 using CodeClass.Domain.User;
@@ -29,6 +30,7 @@ builder.Services.AddIdentity<UserData, IdentityRole>()
 builder.Services.AddScoped<IdentityUserManager>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 
 
 builder.Services.AddAuthentication(options =>

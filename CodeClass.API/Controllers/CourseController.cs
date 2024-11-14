@@ -24,7 +24,7 @@ public class CourseController(ICourseService courseService) : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateCourse(CourseEntity course)
+    public async Task<IActionResult> CreateCourse(CourseDto course)
     {
         var result = await courseService.CreateCourse(course, User);
         if (result.Succeeded)
@@ -36,7 +36,7 @@ public class CourseController(ICourseService courseService) : ControllerBase
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateCourse(CourseEntity course)
+    public async Task<IActionResult> UpdateCourse(CourseDto course)
     {
         var result = await courseService.UpdateCourse(course);
         if (result.Succeeded)

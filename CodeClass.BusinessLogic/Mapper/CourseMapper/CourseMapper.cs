@@ -5,9 +5,9 @@ namespace CodeClass.BusinessLogic.Mapper.CourseMapper;
 
 public static class CourseMapper
 {
-    public static CourseEntity ToDto(this CourseData courseData)
+    public static CourseDto ToDto(this CourseData courseData)
     {
-        return new CourseEntity
+        return new CourseDto
         {
             Id = courseData.Id,
             Name = courseData.Name,
@@ -15,13 +15,13 @@ public static class CourseMapper
         };
     }
 
-    public static CourseData ToEntity(this CourseEntity courseEntity, string userId)
+    public static CourseData ToEntity(this CourseDto courseDto, string userId)
     {
         return new CourseData
         {
-            Id = courseEntity.Id,
-            Name = courseEntity.Name,
-            Category = courseEntity.Category,
+            Id = courseDto.Id,
+            Name = courseDto.Name,
+            Category = courseDto.Category,
             UserId = userId,
         };
     }

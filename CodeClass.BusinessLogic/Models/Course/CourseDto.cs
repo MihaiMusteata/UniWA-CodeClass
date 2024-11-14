@@ -1,6 +1,6 @@
 namespace CodeClass.BusinessLogic.Models.Course;
 
-public class CourseEntity
+public class CourseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

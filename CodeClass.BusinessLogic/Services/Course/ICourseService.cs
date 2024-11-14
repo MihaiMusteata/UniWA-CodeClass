@@ -6,9 +6,9 @@ namespace CodeClass.BusinessLogic.Services.Course;
 
 public interface ICourseService
 {
-    Task<IEnumerable<CourseEntity>> GetCourses();
-    Task<CourseEntity> GetCourse(int courseId);
-    Task<IdentityResult> CreateCourse(CourseEntity course, ClaimsPrincipal userPrincipal);
-    Task<IdentityResult> UpdateCourse(CourseEntity course);
+    Task<IEnumerable<CourseDto>> GetCourses();
+    Task<CourseDto> GetCourse(int courseId);
+    Task<IdentityResult> CreateCourse(CourseDto course, ClaimsPrincipal userPrincipal);
+    Task<IdentityResult> UpdateCourse(CourseDto course);
     Task<IdentityResult> DeleteCourse(int courseId);
 }
