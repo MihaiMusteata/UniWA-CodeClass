@@ -8,19 +8,19 @@ namespace CodeClass.BusinessLogic.Services.Lesson;
 
 public class LessonService(CodeClassDbContext context) : ILessonService
 {
-    public async Task<IEnumerable<LessonDto>> GetLessons()
+    public async Task<IEnumerable<LessonDto>> GetAllAsync()
     {
         var lessons = await context.Lessons.ToListAsync();
         return lessons.Select(l => l.ToDto());
     }
 
-    public async Task<LessonDto> GetLesson(int lessonId)
+    public async Task<LessonDto> GetAsync(int lessonId)
     {
         var lesson = await context.Lessons.FindAsync(lessonId) ?? throw new Exception("Lesson not found");
         return lesson.ToDto();
     }
 
-    public async Task<IdentityResult> CreateLesson(LessonDto lesson)
+    public async Task<IdentityResult> CreateAsync(LessonDto lesson)
     {
         var newLesson = lesson.ToEntity();
         try
@@ -40,7 +40,7 @@ public class LessonService(CodeClassDbContext context) : ILessonService
         return IdentityResult.Success;
     }
 
-    public async Task<IdentityResult> UpdateLesson(LessonDto lesson)
+    public async Task<IdentityResult> UpdateAsync(LessonDto lesson)
     {
         var oldLesson = await context.Lessons.FindAsync(lesson.Id);
         if (oldLesson == null)
@@ -72,7 +72,7 @@ public class LessonService(CodeClassDbContext context) : ILessonService
         return IdentityResult.Success;
     }
 
-    public async Task<IdentityResult> DeleteLesson(int lessonId)
+    public async Task<IdentityResult> DeleteAsync(int lessonId)
     {
         var lesson = await context.Lessons.FindAsync(lessonId);
         if (lesson == null)

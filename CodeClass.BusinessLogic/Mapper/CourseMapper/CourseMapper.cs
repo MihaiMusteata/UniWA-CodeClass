@@ -15,14 +15,14 @@ public static class CourseMapper
         };
     }
 
-    public static CourseData ToEntity(this CourseDto courseDto, string userId)
+    public static CourseData ToEntity(this CourseDto courseDto)
     {
         return new CourseData
         {
             Id = courseDto.Id,
             Name = courseDto.Name,
             Category = courseDto.Category,
-            UserId = userId,
+            UserId = courseDto.UserId
         };
     }
 }

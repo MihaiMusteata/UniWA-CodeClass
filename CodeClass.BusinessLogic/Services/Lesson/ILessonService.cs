@@ -1,13 +1,8 @@
 using CodeClass.BusinessLogic.Models.Lesson;
-using Microsoft.AspNetCore.Identity;
+using CodeClass.BusinessLogic.Services.CrudService;
 
 namespace CodeClass.BusinessLogic.Services.Lesson;
 
-public interface ILessonService
+public interface ILessonService : ICrudService<LessonDto>
 {
-    Task<IEnumerable<LessonDto>> GetLessons();
-    Task<LessonDto> GetLesson(int lessonId);
-    Task<IdentityResult> CreateLesson(LessonDto lesson);
-    Task<IdentityResult> UpdateLesson(LessonDto lesson);
-    Task<IdentityResult> DeleteLesson(int lessonId);
 }

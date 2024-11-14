@@ -1,14 +1,10 @@
 using System.Security.Claims;
 using CodeClass.BusinessLogic.Models.Course;
+using CodeClass.BusinessLogic.Services.CrudService;
 using Microsoft.AspNetCore.Identity;
 
 namespace CodeClass.BusinessLogic.Services.Course;
 
-public interface ICourseService
+public interface ICourseService : ICrudService<CourseDto>
 {
-    Task<IEnumerable<CourseDto>> GetCourses();
-    Task<CourseDto> GetCourse(int courseId);
-    Task<IdentityResult> CreateCourse(CourseDto course, ClaimsPrincipal userPrincipal);
-    Task<IdentityResult> UpdateCourse(CourseDto course);
-    Task<IdentityResult> DeleteCourse(int courseId);
 }

@@ -9,22 +9,21 @@ namespace CodeClass.BusinessLogic.Services.Course;
 
 public class CourseService(CodeClassDbContext context) : ICourseService
 {
-    public async Task<IEnumerable<CourseDto>> GetCourses()
+    public async Task<IEnumerable<CourseDto>> GetAllAsync()
     {
         var courses = await context.Courses.ToListAsync();
         return courses.Select(c => c.ToDto());
     }
 
-    public async Task<CourseDto> GetCourse(int courseId)
+    public async Task<CourseDto> GetAsync(int courseId)
     {
         var course = await context.Courses.FindAsync(courseId) ?? throw new Exception("Course not found");
         return course.ToDto();
     }
 
-    public async Task<IdentityResult> CreateCourse(CourseDto course, ClaimsPrincipal userPrincipal)
+    public async Task<IdentityResult> CreateAsync(CourseDto course)
     {
-        var userId = userPrincipal.FindFirst("Id")?.Value ?? string.Empty;
-        var newCourse = course.ToEntity(userId);
+        var newCourse = course.ToEntity();
         try
         {
             await context.Courses.AddAsync(newCourse);
@@ -42,7 +41,7 @@ public class CourseService(CodeClassDbContext context) : ICourseService
         return IdentityResult.Success;
     }
 
-    public async Task<IdentityResult> UpdateCourse(CourseDto course)
+    public async Task<IdentityResult> UpdateAsync(CourseDto course)
     {
         var oldCourse = await context.Courses.FindAsync(course.Id);
         if (oldCourse == null)
@@ -74,7 +73,7 @@ public class CourseService(CodeClassDbContext context) : ICourseService
         return IdentityResult.Success;
     }
 
-    public async Task<IdentityResult> DeleteCourse(int courseId)
+    public async Task<IdentityResult> DeleteAsync(int courseId)
     {
         var course = await context.Courses.FindAsync(courseId);
         if (course == null)
