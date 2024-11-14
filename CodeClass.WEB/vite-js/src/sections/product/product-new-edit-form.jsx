@@ -1,7 +1,7 @@
-import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import {z as zod} from 'zod';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useMemo, useState, useEffect, useCallback} from 'react';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -15,8 +15,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import {paths} from 'src/routes/paths';
+import {useRouter} from 'src/routes/hooks';
 
 import {
   _tags,
@@ -26,35 +26,20 @@ import {
   PRODUCT_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 
-import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
+import {toast} from 'src/components/snackbar';
+import {Form, Field, schemaHelper} from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export const NewProductSchema = zod.object({
-  name: zod.string().min(1, { message: 'Name is required!' }),
-  description: schemaHelper.editor({ message: { required_error: 'Description is required!' } }),
-  images: schemaHelper.files({ message: { required_error: 'Images is required!' } }),
-  code: zod.string().min(1, { message: 'Product code is required!' }),
-  sku: zod.string().min(1, { message: 'Product sku is required!' }),
-  quantity: zod.number().min(1, { message: 'Quantity is required!' }),
-  colors: zod.string().array().nonempty({ message: 'Choose at least one option!' }),
-  sizes: zod.string().array().nonempty({ message: 'Choose at least one option!' }),
-  tags: zod.string().array().min(2, { message: 'Must have at least 2 items!' }),
-  gender: zod.string().array().nonempty({ message: 'Choose at least one option!' }),
-  price: zod.number().min(1, { message: 'Price should not be $0.00' }),
+  name: zod.string().min(1, {message: 'Name is required!'}),
   // Not required
   category: zod.string(),
-  priceSale: zod.number(),
-  subDescription: zod.string(),
-  taxes: zod.number(),
-  saleLabel: zod.object({ enabled: zod.boolean(), content: zod.string() }),
-  newLabel: zod.object({ enabled: zod.boolean(), content: zod.string() }),
 });
 
 // ----------------------------------------------------------------------
 
-export function ProductNewEditForm({ currentProduct }) {
+export function ProductNewEditForm({currentProduct}) {
   const router = useRouter();
 
   const [includeTaxes, setIncludeTaxes] = useState(false);
@@ -62,23 +47,8 @@ export function ProductNewEditForm({ currentProduct }) {
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      subDescription: currentProduct?.subDescription || '',
-      images: currentProduct?.images || [],
       //
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
-      price: currentProduct?.price || 0,
-      quantity: currentProduct?.quantity || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [],
-      taxes: currentProduct?.taxes || 0,
-      gender: currentProduct?.gender || [],
       category: currentProduct?.category || PRODUCT_CATEGORY_GROUP_OPTIONS[0].classify[1],
-      colors: currentProduct?.colors || [],
-      sizes: currentProduct?.sizes || [],
-      newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
-      saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
     }),
     [currentProduct]
   );
@@ -93,7 +63,7 @@ export function ProductNewEditForm({ currentProduct }) {
     watch,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
 
   const values = watch();
@@ -113,6 +83,7 @@ export function ProductNewEditForm({ currentProduct }) {
   }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('DATA', data)
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
@@ -124,50 +95,14 @@ export function ProductNewEditForm({ currentProduct }) {
     }
   });
 
-  const handleRemoveFile = useCallback(
-    (inputFile) => {
-      const filtered = values.images && values.images?.filter((file) => file !== inputFile);
-      setValue('images', filtered);
-    },
-    [setValue, values.images]
-  );
-
-  const handleRemoveAllFiles = useCallback(() => {
-    setValue('images', [], { shouldValidate: true });
-  }, [setValue]);
-
-  const handleChangeIncludeTaxes = useCallback((event) => {
-    setIncludeTaxes(event.target.checked);
-  }, []);
-
   const renderDetails = (
     <Card>
-      <CardHeader title="Details" subheader="Title, short description, image..." sx={{ mb: 3 }} />
+      <CardHeader title="Details" subheader="Think of a name for your new course" sx={{mb: 3}}/>
 
-      <Divider />
+      <Divider/>
 
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Text name="name" label="Product name" />
-
-        <Field.Text name="subDescription" label="Sub description" multiline rows={4} />
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Content</Typography>
-          <Field.Editor name="description" sx={{ maxHeight: 480 }} />
-        </Stack>
-
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Images</Typography>
-          <Field.Upload
-            multiple
-            thumbnail
-            name="images"
-            maxSize={3145728}
-            onRemove={handleRemoveFile}
-            onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
-          />
-        </Stack>
+      <Stack spacing={3} sx={{p: 3}}>
+        <Field.Text name="name" label="Course name"/>
       </Stack>
     </Card>
   );
@@ -176,32 +111,19 @@ export function ProductNewEditForm({ currentProduct }) {
     <Card>
       <CardHeader
         title="Properties"
-        subheader="Additional functions and attributes..."
-        sx={{ mb: 3 }}
+        subheader="Additional attributes"
+        sx={{mb: 3}}
       />
 
-      <Divider />
+      <Divider/>
 
-      <Stack spacing={3} sx={{ p: 3 }}>
+      <Stack spacing={3} sx={{p: 3}}>
         <Box
-          columnGap={2}
+          columnGap={3}
           rowGap={3}
           display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
         >
-          <Field.Text name="code" label="Product code" />
-
-          <Field.Text name="sku" label="Product SKU" />
-
-          <Field.Text
-            name="quantity"
-            label="Quantity"
-            placeholder="0"
-            type="number"
-            InputLabelProps={{ shrink: true }}
-          />
-
-          <Field.Select native name="category" label="Category" InputLabelProps={{ shrink: true }}>
+          <Field.Select native name="category" label="Category" InputLabelProps={{shrink: true}}>
             {PRODUCT_CATEGORY_GROUP_OPTIONS.map((category) => (
               <optgroup key={category.group} label={category.group}>
                 {category.classify.map((classify) => (
@@ -212,167 +134,27 @@ export function ProductNewEditForm({ currentProduct }) {
               </optgroup>
             ))}
           </Field.Select>
-
-          <Field.MultiSelect
-            checkbox
-            name="colors"
-            label="Colors"
-            options={PRODUCT_COLOR_NAME_OPTIONS}
-          />
-
-          <Field.MultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
         </Box>
 
-        <Field.Autocomplete
-          name="tags"
-          label="Tags"
-          placeholder="+ Tags"
-          multiple
-          freeSolo
-          disableCloseOnSelect
-          options={_tags.map((option) => option)}
-          getOptionLabel={(option) => option}
-          renderOption={(props, option) => (
-            <li {...props} key={option}>
-              {option}
-            </li>
-          )}
-          renderTags={(selected, getTagProps) =>
-            selected.map((option, index) => (
-              <Chip
-                {...getTagProps({ index })}
-                key={option}
-                label={option}
-                size="small"
-                color="info"
-                variant="soft"
-              />
-            ))
-          }
-        />
-
-        <Stack spacing={1}>
-          <Typography variant="subtitle2">Gender</Typography>
-          <Field.MultiCheckbox row name="gender" options={PRODUCT_GENDER_OPTIONS} sx={{ gap: 2 }} />
-        </Stack>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Field.Switch name="saleLabel.enabled" label={null} sx={{ m: 0 }} />
-          <Field.Text
-            name="saleLabel.content"
-            label="Sale label"
-            fullWidth
-            disabled={!values.saleLabel.enabled}
-          />
-        </Stack>
-
-        <Stack direction="row" alignItems="center" spacing={3}>
-          <Field.Switch name="newLabel.enabled" label={null} sx={{ m: 0 }} />
-          <Field.Text
-            name="newLabel.content"
-            label="New label"
-            fullWidth
-            disabled={!values.newLabel.enabled}
-          />
-        </Stack>
-      </Stack>
-    </Card>
-  );
-
-  const renderPricing = (
-    <Card>
-      <CardHeader title="Pricing" subheader="Price related inputs" sx={{ mb: 3 }} />
-
-      <Divider />
-
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <Field.Text
-          name="price"
-          label="Regular price"
-          placeholder="0.00"
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <Field.Text
-          name="priceSale"
-          label="Sale price"
-          placeholder="0.00"
-          type="number"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Box component="span" sx={{ color: 'text.disabled' }}>
-                  $
-                </Box>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch id="toggle-taxes" checked={includeTaxes} onChange={handleChangeIncludeTaxes} />
-          }
-          label="Price includes taxes"
-        />
-
-        {!includeTaxes && (
-          <Field.Text
-            name="taxes"
-            label="Tax (%)"
-            placeholder="0.00"
-            type="number"
-            InputLabelProps={{ shrink: true }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Box component="span" sx={{ color: 'text.disabled' }}>
-                    %
-                  </Box>
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
       </Stack>
     </Card>
   );
 
   const renderActions = (
     <Stack spacing={3} direction="row" alignItems="center" flexWrap="wrap">
-      <FormControlLabel
-        control={<Switch defaultChecked inputProps={{ id: 'publish-switch' }} />}
-        label="Publish"
-        sx={{ pl: 3, flexGrow: 1 }}
-      />
 
       <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-        {!currentProduct ? 'Create product' : 'Save changes'}
+        {!currentProduct ? 'Create course' : 'Save changes'}
       </LoadingButton>
     </Stack>
   );
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={{ xs: 3, md: 5 }} sx={{ mx: 'auto', maxWidth: { xs: 720, xl: 880 } }}>
+      <Stack spacing={{xs: 3, md: 5}}>
         {renderDetails}
 
         {renderProperties}
-
-        {renderPricing}
 
         {renderActions}
       </Stack>
