@@ -6,6 +6,7 @@ import { CONFIG } from 'src/config-global';
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { _coursesContinue, _coursesFeatured, _coursesReminder } from 'src/_mock';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { CourseProgress } from '../course-progress';
 import { CourseContinue } from '../course-continue';
@@ -19,6 +20,7 @@ import { CourseWidgetSummary } from '../course-widget-summary';
 // ----------------------------------------------------------------------
 
 export function OverviewCourseView() {
+  const { user } = useAuthContext();
   return (
     <DashboardContent
       maxWidth={false}
@@ -52,7 +54,7 @@ export function OverviewCourseView() {
         >
           <Box sx={{ mb: 2 }}>
             <Typography variant="h4" sx={{ mb: 1 }}>
-              Hi, Frankie 👋
+              Hi, {user.displayName} 👋
             </Typography>
             <Typography
               sx={{ color: 'text.secondary' }}

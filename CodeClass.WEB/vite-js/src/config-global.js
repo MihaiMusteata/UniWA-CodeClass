@@ -5,7 +5,7 @@ import packageJson from '../package.json';
 // ----------------------------------------------------------------------
 
 export const CONFIG = {
-  appName: 'Minimal UI',
+  appName: 'IT Didactics',
   appVersion: packageJson.version,
   serverUrl: 'https://localhost:7208/',
   assetsDir: import.meta.env.VITE_ASSETS_DIR ?? '',

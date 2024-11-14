@@ -20,8 +20,6 @@ import {toast} from 'src/components/snackbar';
 
 import {FormHead} from '../../../components/form-head';
 
-import {postData} from '../../../../axios/api';
-import {SIGN_IN} from '../../../../axios/endpoints';
 
 // ----------------------------------------------------------------------
 
@@ -55,16 +53,6 @@ export function SplitSignInView() {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const response = await postData(SIGN_IN, data);
-      if (response.status === 200) {
-        toast.success('Login successful!');
-        router.refresh();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Login failed!');
-    }
   });
 
   const renderForm = (

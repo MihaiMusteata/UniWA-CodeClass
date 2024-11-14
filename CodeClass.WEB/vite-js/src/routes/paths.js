@@ -109,6 +109,7 @@ export const paths = {
       booking: `${ROOTS.DASHBOARD}/booking`,
       file: `${ROOTS.DASHBOARD}/file`,
       course: `${ROOTS.DASHBOARD}/course`,
+      courses: `${ROOTS.DASHBOARD}/courses`,
     },
     user: {
       root: `${ROOTS.DASHBOARD}/user`,

@@ -48,13 +48,14 @@ export const navData = [
   {
     subheader: 'Overview',
     items: [
+      { title: 'Courses', path: paths.dashboard.general.courses, icon: ICONS.course },
+      { title: 'Course', path: paths.dashboard.general.course, icon: ICONS.course },
       { title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard },
       { title: 'Ecommerce', path: paths.dashboard.general.ecommerce, icon: ICONS.ecommerce },
       { title: 'Analytics', path: paths.dashboard.general.analytics, icon: ICONS.analytics },
       { title: 'Banking', path: paths.dashboard.general.banking, icon: ICONS.banking },
       { title: 'Booking', path: paths.dashboard.general.booking, icon: ICONS.booking },
       { title: 'File', path: paths.dashboard.general.file, icon: ICONS.file },
-      { title: 'Course', path: paths.dashboard.general.course, icon: ICONS.course },
     ],
   },
   /**
