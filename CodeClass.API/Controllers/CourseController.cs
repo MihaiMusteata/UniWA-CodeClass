@@ -28,4 +28,22 @@ public class CourseController : BaseCrudController<CourseDto>
         var lessons = await _courseService.GetCourseLessonsAsync(courseId);
         return lessons;
     }
+    
+    [HttpPost("{courseId}/enroll/{studentId}")]
+    public async Task<IActionResult> EnrollStudentAsync(string studentId, int courseId)
+    {
+        var result = await _courseService.EnrollStudentAsync(studentId, courseId);
+        if (result.Succeeded)
+        {
+            return Ok();
+        }
+        return BadRequest(result.Errors);
+    }
+    
+    [HttpGet("{studentId}/courses")]
+    public async Task<IEnumerable<CoursePreviewDto>> GetStudentCoursesAsync(string studentId)
+    {
+        var courses = await _courseService.GetStudentCoursesAsync(studentId);
+        return courses;
+    }
 }

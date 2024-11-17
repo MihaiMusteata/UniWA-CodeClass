@@ -21,7 +21,7 @@ import {usePopover, CustomPopover} from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export function CoursesList({title, subheader, tableData, headLabel, ...other}) {
+export function CoursesList({title, onEnroll, subheader, tableData, headLabel, ...other}) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{mb: 3}}/>
@@ -32,7 +32,7 @@ export function CoursesList({title, subheader, tableData, headLabel, ...other}) 
 
           <TableBody>
             {tableData.map((row) => (
-              <RowItem key={row.id} row={row}/>
+              <RowItem key={row.id} row={row} handleClick={row.isEnrolled ? null : onEnroll}/>
             ))}
           </TableBody>
         </Table>
@@ -53,14 +53,14 @@ export function CoursesList({title, subheader, tableData, headLabel, ...other}) 
   );
 }
 
-function RowItem({row}) {
+function RowItem({row, handleClick}) {
 
   return (
     <>
       <TableRow>
         <TableCell>{row.id}</TableCell>
 
-        <TableCell>{row.teacher}</TableCell>
+        <TableCell>{row.teacherName}</TableCell>
 
         <TableCell>{row.name}</TableCell>
 
@@ -69,26 +69,15 @@ function RowItem({row}) {
         <TableCell>
           <Label
             variant="soft"
-            color={
-              (row.enrollStatus === 'Not Enrolled' && 'warning') ||
-              'success'
-            }
+            color={row.isEnrolled ? 'success' : 'warning'}
           >
-            {row.enrollStatus}
+            {row.isEnrolled ? 'Enrolled' : 'Not Enrolled'}
           </Label>
         </TableCell>
 
         <TableCell>
-          <Button variant="contained" color={
-            (row.enrollStatus === 'Not Enrolled' && 'warning') ||
-            'success'
-          }
-          >
-            {
-              (row.enrollStatus === 'Not Enrolled' && 'Enroll') ||
-              'View'
-
-            }
+          <Button variant="contained" color={row.isEnrolled ? 'success' : 'warning'} onClick={() => handleClick(row.id)}>
+            {row.isEnrolled ? 'View' : 'Enroll'}
           </Button>
         </TableCell>
       </TableRow>

@@ -25,4 +25,16 @@ public static class CourseMapper
             UserId = courseDto.UserId
         };
     }
+    
+    public static CoursePreviewDto ToPreviewDto(this CourseData courseData, bool isEnrolled)
+    {
+        return new CoursePreviewDto
+        {
+            Id = courseData.Id,
+            TeacherName = courseData.Teacher.DisplayName,
+            Name = courseData.Name,
+            Category = courseData.Category,
+            IsEnrolled = isEnrolled
+        };
+    }
 }

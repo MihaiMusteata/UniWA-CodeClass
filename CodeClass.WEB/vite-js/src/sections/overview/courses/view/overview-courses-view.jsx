@@ -1,3 +1,4 @@
+import {useCallback, useEffect, useState} from "react";
 import Box from '@mui/material/Box';
 import {cardClasses} from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
@@ -6,6 +7,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import {CONFIG} from 'src/config-global';
 import {DashboardContent} from 'src/layouts/dashboard';
 import {useAuthContext} from 'src/auth/hooks';
+import axios from 'src/utils/axios';
 import {CoursesList} from '../courses-list';
 import {varAlpha} from "../../../../theme/styles/index";
 
@@ -14,99 +16,31 @@ import {varAlpha} from "../../../../theme/styles/index";
 
 export function OverviewCoursesView() {
   const {user} = useAuthContext();
-  const course_data = [
-    {
-      id: 'C-101',
-      teacher: 'John Doe',
-      name: 'Introduction to Computer Science',
-      category: 'Computer Science',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-102',
-      teacher: 'Jane Smith',
-      name: 'Data Structures and Algorithms',
-      category: 'Software Engineering',
-      enrollStatus: 'Not Enrolled',
-    },
-    {
-      id: 'C-103',
-      teacher: 'Alice Johnson',
-      name: 'Machine Learning Basics',
-      category: 'Artificial Intelligence',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-104',
-      teacher: 'Michael Brown',
-      name: 'Web Development Fundamentals',
-      category: 'Web Development',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-105',
-      teacher: 'Emma Wilson',
-      name: 'Introduction to Databases',
-      category: 'Database Management',
-      enrollStatus: 'Not Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-    {
-      id: 'C-106',
-      teacher: 'Daniel Lee',
-      name: 'Cybersecurity Essentials',
-      category: 'Cybersecurity',
-      enrollStatus: 'Enrolled',
-    },
-  ];
+  const [courses, setCourses] = useState([]);
+  const [updateCourses, setUpdateCourses] = useState(false);
+
+  const handleEnroll = async (courseId) => {
+    console.log('Click')
+    try {
+      await axios.post(`/api/course/${courseId}/enroll/${user.id}`);
+      setUpdateCourses(!updateCourses);
+      } catch (e) {
+      console.log(`Error : ${e}`);
+    }
+  }
+
+  const getCourses = useCallback(async () => {
+    try {
+      const res = await axios.get(`/api/course/${user.id}/courses`);
+      setCourses(res.data);
+    } catch (e) {
+      console.log(`Error : ${e}`);
+    }
+  }, [user.id]);
+
+  useEffect(() => {
+    getCourses();
+  }, [updateCourses, getCourses]);
 
   return (
 
@@ -128,13 +62,14 @@ export function OverviewCoursesView() {
 
           <CoursesList
             title="Courses List"
-            tableData={course_data}
+            tableData={courses}
+            onEnroll={handleEnroll}
             headLabel={[
               {id: 'id', label: 'Course ID'},
-              {id: 'teacher', label: 'Teacher Name'},
+              {id: 'teacherName', label: 'Teacher Name'},
               {id: 'name', label: 'Course Name'},
               {id: 'category', label: 'Category'},
-              {id: 'enrollStatus', label: 'Enroll Status'},
+              {id: 'isEnrolled', label: 'Enroll Status'},
               {id: 'action', label: 'Action'},
             ]}
           />

@@ -3,6 +3,7 @@ using CodeClass.BusinessLogic.Mapper.LessonMapper;
 using CodeClass.BusinessLogic.Models.Course;
 using CodeClass.BusinessLogic.Models.Lesson;
 using CodeClass.Domain;
+using CodeClass.Domain.Tables.Enrollment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -109,14 +110,14 @@ public class CourseService(CodeClassDbContext context) : ICourseService
             .Where(c => c.UserId == teacherId)
             .Select(c => c.ToDto())
             .ToListAsync();
-        
+
         courses.ForEach(c => c.TotalLessons = context.Lessons.Count(l => l.CourseId == c.Id));
         courses.ForEach(c => c.EnrolledStudents = context.Enrollments.Count(e => e.CourseId == c.Id));
 
         return courses;
     }
-    
-    public async Task <IEnumerable<LessonDto>> GetCourseLessonsAsync(int courseId)
+
+    public async Task<IEnumerable<LessonDto>> GetCourseLessonsAsync(int courseId)
     {
         var lessons = await context.Lessons
             .Where(l => l.CourseId == courseId)
@@ -124,5 +125,47 @@ public class CourseService(CodeClassDbContext context) : ICourseService
             .ToListAsync();
 
         return lessons;
+    }
+
+    public async Task<IdentityResult> EnrollStudentAsync(string studentId, int courseId)
+    {
+        var newEnrollment = new Enrollment
+        {
+            UserId = studentId,
+            CourseId = courseId
+        };
+        try
+        {
+            await context.Enrollments.AddAsync(newEnrollment);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "EnrollmentFailed",
+                Description = e.Message
+            });
+        }
+
+        return IdentityResult.Success;
+    }
+    
+    public async Task<IEnumerable<CoursePreviewDto>> GetStudentCoursesAsync(string studentId)
+    {
+        var enrolledCourses = await context.Enrollments
+            .Include(e => e.Course)
+            .ThenInclude(c => c.Teacher)
+            .Where(e => e.UserId == studentId)
+            .Select(e => e.Course.ToPreviewDto(true))
+            .ToListAsync();
+        
+        var remainingCourses = await context.Courses
+            .Include(c => c.Teacher)
+            .Where(c => !enrolledCourses.Select(ec => ec.Id).Contains(c.Id))
+            .Select(c => c.ToPreviewDto(false))
+            .ToListAsync();
+
+        return enrolledCourses.Concat(remainingCourses);
     }
 }
