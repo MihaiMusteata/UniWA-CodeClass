@@ -11,7 +11,6 @@ public static class QuizAnswerMapper
         {
             OptionText = entity.OptionText,
             IsCorrect = entity.IsCorrect,
-            LessonQuizId = entity.LessonQuizId
         };
     }
 

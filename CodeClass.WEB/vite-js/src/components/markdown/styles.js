@@ -42,9 +42,8 @@ export const StyledRoot = styled(ReactMarkdown)(({ theme }) => ({
    * Image
    */
   [`& .${markdownClasses.content.image}`]: {
-    width: '100%',
-    height: 'auto',
-    maxWidth: '100%',
+    width: 'auto',
+    height: '100%',
     margin: 'auto auto 1.25em',
   },
   /**

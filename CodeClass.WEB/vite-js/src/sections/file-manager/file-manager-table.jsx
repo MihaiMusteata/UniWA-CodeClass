@@ -21,15 +21,15 @@ import { FileManagerTableRow } from './file-manager-table-row';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
-  { id: 'size', label: 'Size', width: 120 },
-  { id: 'type', label: 'Type', width: 120 },
-  { id: 'modifiedAt', label: 'Modified', width: 140 },
-  {
-    id: 'shared',
-    label: 'Shared',
-    align: 'right',
-    width: 140,
-  },
+  // { id: 'size', label: 'Size', width: 120 },
+  // { id: 'type', label: 'Type', width: 120 },
+  // { id: 'modifiedAt', label: 'Modified', width: 140 },
+  // {
+  //   id: 'shared',
+  //   label: 'Shared',
+  //   align: 'right',
+  //   width: 140,
+  // },
   { id: '', width: 88 },
 ];
 
@@ -111,7 +111,6 @@ export function FileManagerTable({
           <Table
             size={dense ? 'small' : 'medium'}
             sx={{
-              minWidth: 960,
               borderCollapse: 'separate',
               borderSpacing: '0 16px',
             }}

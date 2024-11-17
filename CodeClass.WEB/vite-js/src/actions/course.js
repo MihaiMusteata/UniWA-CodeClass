@@ -13,20 +13,20 @@ const swrOptions = {
 
 // ----------------------------------------------------------------------
 
-export function useGetProducts() {
-  const url = endpoints.product.list;
+export function useGetCourses(teacherId) {
+  const url = `/api/course/list/${teacherId}`
 
   const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
-      products: data?.products || [],
-      productsLoading: isLoading,
-      productsError: error,
-      productsValidating: isValidating,
-      productsEmpty: !isLoading && !data?.products.length,
+      courses: data || [],
+      coursesLoading: isLoading,
+      coursesError: error,
+      coursesValidating: isValidating,
+      coursesEmpty: !isLoading && !data?.length,
     }),
-    [data?.products, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -34,19 +34,19 @@ export function useGetProducts() {
 
 // ----------------------------------------------------------------------
 
-export function useGetProduct(productId) {
-  const url = productId ? [endpoints.product.details, { params: { productId } }] : '';
+export function useGetCourse(id) {
+  const url = id ? [endpoints.course.details, { params: { id } }] : '';
 
   const { data, isLoading, error, isValidating } = useSWR(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
-      product: data?.product,
-      productLoading: isLoading,
-      productError: error,
-      productValidating: isValidating,
+      course: data,
+      courseLoading: isLoading,
+      courseError: error,
+      courseValidating: isValidating,
     }),
-    [data?.product, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;

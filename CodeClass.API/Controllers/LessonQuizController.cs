@@ -14,26 +14,10 @@ public class LessonQuizController: BaseCrudController<LessonQuizDto>
         _lessonQuizService = lessonQuizService;
     }
     
-    [HttpGet("{quizId}/answers")]
-    public async Task<IEnumerable<QuizAnswerDto>> GetQuizAnswersAsync(int quizId)
+    [HttpGet("{lessonId}/quizzes")]
+    public async Task<IEnumerable<LessonQuizDto>> GetLessonQuizzes(int lessonId)
     {
-        var answers = await _lessonQuizService.GetQuizAnswersAsync(quizId);
-        return answers;
+        return await _lessonQuizService.GetLessonQuizzes(lessonId);
     }
-    
-    [HttpPost("{quizId}/add-answer")]
-    public async Task<IActionResult> AddAnswerAsync(int quizId, QuizAnswerDto answerDto)
-    {
-        var result = await _lessonQuizService.AddAnswerAsync(quizId, answerDto);
-        return result.Succeeded ? Ok() : BadRequest(result.Errors);
-    }
-    
-    [HttpDelete("{quizId}/delete-answer/{answerId}")]
-    public async Task<IActionResult> DeleteAnswerAsync(int quizId, int answerId)
-    {
-        var result = await _lessonQuizService.DeleteAnswerAsync(quizId, answerId);
-        return result.Succeeded ? Ok() : BadRequest(result.Errors);
-    }
-    
     
 }

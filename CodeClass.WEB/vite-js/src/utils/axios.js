@@ -55,4 +55,8 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+  course: {
+    create: '/api/course/create',
+    details: '/api/course',
+  },
 };

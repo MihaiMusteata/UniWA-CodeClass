@@ -128,52 +128,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </Stack>
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {fData(row.size)}
-        </TableCell>
-
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {row.type}
-        </TableCell>
-
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          <ListItemText
-            primary={fDate(row.modifiedAt)}
-            secondary={fTime(row.modifiedAt)}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{ mt: 0.5, component: 'span', typography: 'caption' }}
-          />
-        </TableCell>
-
-        <TableCell align="right" onClick={handleClick}>
-          <AvatarGroup
-            max={4}
-            sx={{
-              display: 'inline-flex',
-              [`& .${avatarGroupClasses.avatar}`]: {
-                width: 24,
-                height: 24,
-                '&:first-of-type': { fontSize: 12 },
-              },
-            }}
-          >
-            {row.shared &&
-              row.shared.map((person) => (
-                <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
-              ))}
-          </AvatarGroup>
-        </TableCell>
-
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Checkbox
-            color="warning"
-            icon={<Iconify icon="eva:star-outline" />}
-            checkedIcon={<Iconify icon="eva:star-fill" />}
-            checked={favorite.value}
-            onChange={favorite.onToggle}
-            sx={{ p: 0.75 }}
-          />
-
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
@@ -221,16 +176,6 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </MenuItem>
         </MenuList>
       </CustomPopover>
-
-      <FileManagerFileDetails
-        item={row}
-        favorited={favorite.value}
-        onFavorite={favorite.onToggle}
-        onCopyLink={handleCopy}
-        open={details.value}
-        onClose={details.onFalse}
-        onDelete={onDeleteRow}
-      />
 
       <FileManagerShareDialog
         open={share.value}

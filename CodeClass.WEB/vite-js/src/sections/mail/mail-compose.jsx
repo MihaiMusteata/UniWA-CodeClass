@@ -143,6 +143,7 @@ export function MailCompose({ onCloseCompose }) {
               variant="contained"
               color="primary"
               endIcon={<Iconify icon="iconamoon:send-fill" />}
+              onClick={()=> console.log('Send:', message)}
             >
               Send
             </Button>

@@ -10,7 +10,7 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import { orderBy } from 'src/utils/helper';
 
-import { useSearchProducts } from 'src/actions/product';
+import { useSearchProducts } from 'src/actions/course';
 import {
   PRODUCT_SORT_OPTIONS,
   PRODUCT_COLOR_OPTIONS,

@@ -1,33 +1,26 @@
 import {z as zod} from 'zod';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useMemo, useState, useEffect, useCallback} from 'react';
+import {useMemo, useState, useEffect} from 'react';
 
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 import {paths} from 'src/routes/paths';
 import {useRouter} from 'src/routes/hooks';
 
 import {
-  _tags,
-  PRODUCT_SIZE_OPTIONS,
-  PRODUCT_GENDER_OPTIONS,
-  PRODUCT_COLOR_NAME_OPTIONS,
-  PRODUCT_CATEGORY_GROUP_OPTIONS,
-} from 'src/_mock';
+  COURSE_CATEGORY_GROUP_OPTIONS,
+} from 'src/_mock/_course';
 
 import {toast} from 'src/components/snackbar';
 import {Form, Field, schemaHelper} from 'src/components/hook-form';
+import { useAuthContext } from 'src/auth/hooks';
+import axios, {endpoints} from "../../utils/axios";
 
 // ----------------------------------------------------------------------
 
@@ -42,13 +35,15 @@ export const NewProductSchema = zod.object({
 export function ProductNewEditForm({currentProduct}) {
   const router = useRouter();
 
+  const { user } = useAuthContext();
+
   const [includeTaxes, setIncludeTaxes] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || '',
       //
-      category: currentProduct?.category || PRODUCT_CATEGORY_GROUP_OPTIONS[0].classify[1],
+      category: currentProduct?.category || COURSE_CATEGORY_GROUP_OPTIONS[0].classify[1],
     }),
     [currentProduct]
   );
@@ -83,13 +78,16 @@ export function ProductNewEditForm({currentProduct}) {
   }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
+    data.userId = user.id;
+    data.category = `${data.category}`
     console.log('DATA', data)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const res = await axios.post(endpoints.course.create, data);
+      console.log('RES', res)
       reset();
       toast.success(currentProduct ? 'Update success!' : 'Create success!');
       router.push(paths.dashboard.product.root);
-      console.info('DATA', data);
+      router.refresh();
     } catch (error) {
       console.error(error);
     }
@@ -124,7 +122,7 @@ export function ProductNewEditForm({currentProduct}) {
           display="grid"
         >
           <Field.Select native name="category" label="Category" InputLabelProps={{shrink: true}}>
-            {PRODUCT_CATEGORY_GROUP_OPTIONS.map((category) => (
+            {COURSE_CATEGORY_GROUP_OPTIONS.map((category) => (
               <optgroup key={category.group} label={category.group}>
                 {category.classify.map((classify) => (
                   <option key={classify} value={classify}>

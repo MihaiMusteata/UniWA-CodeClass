@@ -119,6 +119,7 @@ public class AuthenticationService : IAuthenticationService
         
         return new Profile
         {
+            Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email ?? string.Empty,

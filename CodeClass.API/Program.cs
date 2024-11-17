@@ -8,6 +8,7 @@ using CodeClass.Domain;
 using CodeClass.Domain.Identity;
 using CodeClass.Domain.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -34,6 +35,18 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ILessonQuizService, LessonQuizService>();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = long.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 3L * 1024 * 1024 * 1024;
+    serverOptions.Limits.MaxRequestBufferSize = 3L * 1024 * 1024 * 1024;
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -88,12 +101,18 @@ builder.Services.AddCors(options =>
 
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins(frontendUrl)
+        builder.WithOrigins(frontendUrl, "http://localhost:3031")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
+
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
 
 var app = builder.Build();
 

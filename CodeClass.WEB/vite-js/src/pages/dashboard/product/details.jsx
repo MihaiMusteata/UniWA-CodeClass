@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/config-global';
-import { useGetProduct } from 'src/actions/product';
+import {useGetCourse} from 'src/actions/course';
 
-import { ProductDetailsView } from 'src/sections/product/view';
+import { CourseDetailsView } from 'src/sections/product/view';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ const metadata = { title: `Product details | Dashboard - ${CONFIG.appName}` };
 export default function Page() {
   const { id = '' } = useParams();
 
-  const { product, productLoading, productError } = useGetProduct(id);
+  const { course, courseLoading, courseError } = useGetCourse(id);
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <ProductDetailsView product={product} loading={productLoading} error={productError} />
+      <CourseDetailsView course={course} loading={courseLoading} error={courseError} />
     </>
   );
 }

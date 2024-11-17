@@ -11,7 +11,8 @@ public static class LessonQuizMapper
         {
             Id = entity.Id,
             Question = entity.Question,
-            LessonId = entity.LessonId
+            LessonId = entity.LessonId,
+            Answers = entity.AnswerOptions.Select(a => a.ToDto())
         };
     }
 
@@ -21,7 +22,7 @@ public static class LessonQuizMapper
         {
             Id = dto.Id,
             Question = dto.Question,
-            LessonId = dto.LessonId
+            LessonId = dto.LessonId,
         };
     }
     

@@ -1,6 +1,7 @@
-using System.Security.Claims;
 using CodeClass.BusinessLogic.Mapper.CourseMapper;
+using CodeClass.BusinessLogic.Mapper.LessonMapper;
 using CodeClass.BusinessLogic.Models.Course;
+using CodeClass.BusinessLogic.Models.Lesson;
 using CodeClass.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -100,5 +101,28 @@ public class CourseService(CodeClassDbContext context) : ICourseService
         }
 
         return IdentityResult.Success;
+    }
+
+    public async Task<IEnumerable<CourseDto>> GetTeacherCoursesAsync(string teacherId)
+    {
+        var courses = await context.Courses
+            .Where(c => c.UserId == teacherId)
+            .Select(c => c.ToDto())
+            .ToListAsync();
+        
+        courses.ForEach(c => c.TotalLessons = context.Lessons.Count(l => l.CourseId == c.Id));
+        courses.ForEach(c => c.EnrolledStudents = context.Enrollments.Count(e => e.CourseId == c.Id));
+
+        return courses;
+    }
+    
+    public async Task <IEnumerable<LessonDto>> GetCourseLessonsAsync(int courseId)
+    {
+        var lessons = await context.Lessons
+            .Where(l => l.CourseId == courseId)
+            .Select(l => l.ToDto())
+            .ToListAsync();
+
+        return lessons;
     }
 }

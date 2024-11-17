@@ -18,10 +18,10 @@ public abstract class BaseCrudController<TEntityDto> : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var entities = await _service.GetAllAsync();
-        return Ok(entities);
+        return Ok(new {list = entities});
     }
 
-    [HttpGet("get/{id}")]
+    [HttpGet()]
     public async Task<IActionResult> Get(int id)
     {
         var entity = await _service.GetAsync(id);

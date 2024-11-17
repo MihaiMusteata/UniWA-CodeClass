@@ -15,16 +15,12 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export function ProductDetailsToolbar({
-  publish,
   backLink,
   editLink,
   liveLink,
-  publishOptions,
-  onChangePublish,
   sx,
   ...other
 }) {
-  const popover = usePopover();
 
   return (
     <>
@@ -39,13 +35,6 @@ export function ProductDetailsToolbar({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {publish === 'published' && (
-          <Tooltip title="Go Live">
-            <IconButton component={RouterLink} href={liveLink}>
-              <Iconify icon="eva:external-link-fill" />
-            </IconButton>
-          </Tooltip>
-        )}
 
         <Tooltip title="Edit">
           <IconButton component={RouterLink} href={editLink}>
@@ -53,42 +42,8 @@ export function ProductDetailsToolbar({
           </IconButton>
         </Tooltip>
 
-        <LoadingButton
-          color="inherit"
-          variant="contained"
-          loading={!publish}
-          loadingIndicator="Loading…"
-          endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-          onClick={popover.onOpen}
-          sx={{ textTransform: 'capitalize' }}
-        >
-          {publish}
-        </LoadingButton>
       </Stack>
 
-      <CustomPopover
-        open={popover.open}
-        anchorEl={popover.anchorEl}
-        onClose={popover.onClose}
-        slotProps={{ arrow: { placement: 'top-right' } }}
-      >
-        <MenuList>
-          {publishOptions.map((option) => (
-            <MenuItem
-              key={option.value}
-              selected={option.value === publish}
-              onClick={() => {
-                popover.onClose();
-                onChangePublish(option.value);
-              }}
-            >
-              {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
-              {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
-              {option.label}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </CustomPopover>
     </>
   );
 }

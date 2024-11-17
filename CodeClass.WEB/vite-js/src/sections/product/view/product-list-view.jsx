@@ -19,7 +19,7 @@ import {RouterLink} from 'src/routes/components';
 import {useBoolean} from 'src/hooks/use-boolean';
 import {useSetState} from 'src/hooks/use-set-state';
 
-import {useGetProducts} from 'src/actions/product';
+import {useGetCourses} from 'src/actions/course';
 import {DashboardContent} from 'src/layouts/dashboard';
 
 import {toast} from 'src/components/snackbar';
@@ -30,66 +30,32 @@ import {CustomBreadcrumbs} from 'src/components/custom-breadcrumbs';
 
 import {ProductTableFiltersResult} from '../product-table-filters-result';
 import {varAlpha} from "../../../theme/styles/index";
+import {useAuthContext} from "../../../auth/hooks/index";
 
 // ----------------------------------------------------------------------
-const mockData = [
-  {
-    id: 1,
-    name: 'JavaScript Basics',
-    category: 'Programming',
-    totalLessons: 10,
-    enrolledStudents: 120,
-  },
-  {
-    id: 2,
-    name: 'Introduction to Data Science',
-    category: 'Data Science',
-    totalLessons: 15,
-    enrolledStudents: 80,
-  },
-  {
-    id: 3,
-    name: 'Advanced React',
-    category: 'Programming',
-    totalLessons: 20,
-    enrolledStudents: 150,
-  },
-  {
-    id: 4,
-    name: 'Graphic Design for Beginners',
-    category: 'Design',
-    totalLessons: 12,
-    enrolledStudents: 60,
-  },
-  {
-    id: 5,
-    name: 'Machine Learning Foundations',
-    category: 'AI & Machine Learning',
-    totalLessons: 25,
-    enrolledStudents: 200,
-  },
-];
 
 export function ProductListView() {
   const confirmRows = useBoolean();
 
   const router = useRouter();
 
-  const {products, productsLoading} = useGetProducts();
+  const { user } = useAuthContext();
+
+  const {courses, coursesLoading} = useGetCourses(user.id);
 
   const filters = useSetState({publish: [], stock: []});
 
-  const [tableData, setTableData] = useState(mockData);
+  const [tableData, setTableData] = useState();
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
 
   const [filterButtonEl, setFilterButtonEl] = useState(null);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (courses?.length) {
+      setTableData(courses);
     }
-  }, [products]);
+  }, [courses]);
 
   const canReset = filters.state.publish.length > 0 || filters.state.stock.length > 0;
 
@@ -135,7 +101,7 @@ export function ProductListView() {
         canReset={canReset}
         selectedRowIds={selectedRowIds}
         setFilterButtonEl={setFilterButtonEl}
-        filteredResults={dataFiltered.length}
+        filteredResults={dataFiltered?.length ?? 0}
         onOpenConfirmDeleteRows={confirmRows.onTrue}
       />
     ),
@@ -247,7 +213,7 @@ export function ProductListView() {
             disableRowSelectionOnClick
             rows={dataFiltered}
             columns={columns}
-            loading={productsLoading}
+            loading={coursesLoading}
             getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{pagination: {paginationModel: {pageSize: 10}}}}

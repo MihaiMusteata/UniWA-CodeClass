@@ -10,8 +10,10 @@ public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
 {
     public async Task<IEnumerable<LessonQuizDto>> GetAllAsync()
     {
-        var quizzes = await context.LessonQuizzes.ToListAsync();
-        return quizzes.Select(l => l.ToDto());
+        var quizzes = await context.LessonQuizzes
+            .Include(q => q.AnswerOptions)
+            .ToListAsync();
+        return quizzes.Select(q => q.ToDto());
     }
 
     public async Task<LessonQuizDto> GetAsync(int id)
@@ -25,7 +27,13 @@ public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
         var newQuiz = dto.ToEntity();
         try
         {
-            await context.LessonQuizzes.AddAsync(newQuiz);
+            var lessonQuiz = await context.LessonQuizzes.AddAsync(newQuiz);
+            await context.SaveChangesAsync();
+            
+            var lessonQuizId = lessonQuiz.Entity.Id;
+            
+            var answerOptions = dto.Answers.Select(a => a.ToEntity(lessonQuizId));
+            await context.AnswerOptions.AddRangeAsync(answerOptions);
             await context.SaveChangesAsync();
         }
         catch (Exception e)
@@ -101,84 +109,12 @@ public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
         return IdentityResult.Success;
     }
 
-    public async Task<IEnumerable<QuizAnswerDto>> GetQuizAnswersAsync(int quizId)
+    public async Task<IEnumerable<LessonQuizDto>> GetLessonQuizzes(int lessonId)
     {
-        var quiz = await context.LessonQuizzes
+        var quizzes = await context.LessonQuizzes
             .Include(q => q.AnswerOptions)
-            .FirstOrDefaultAsync(q => q.Id == quizId);
-        if (quiz == null)
-        {
-            throw new Exception("Quiz not found");
-        }
-        
-        return quiz.AnswerOptions.Select(a => a.ToDto());
-    }
-
-    public async Task<IdentityResult> AddAnswerAsync(int quizId, QuizAnswerDto answerDto)
-    {
-        var quiz = await context.LessonQuizzes.FindAsync(quizId);
-        if (quiz == null)
-        {
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "QuizNotFound",
-                Description = "Quiz not found"
-            });
-        }
-
-        var answer = answerDto.ToEntity(quizId);
-        try
-        {
-            await context.AnswerOptions.AddAsync(answer);
-            await context.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "AnswerCreationFailed",
-                Description = e.Message
-            });
-        }
-
-        return IdentityResult.Success;
-    }
-
-    public async Task<IdentityResult> DeleteAnswerAsync(int quizId, int answerId)
-    {
-        var answer = await context.AnswerOptions.FindAsync(answerId);
-        if (answer == null)
-        {
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "AnswerNotFound",
-                Description = "Answer not found"
-            });
-        }
-
-        if (answer.LessonQuizId != quizId)
-        {
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "AnswerNotFound",
-                Description = "Answer not found"
-            });
-        }
-
-        try
-        {
-            context.AnswerOptions.Remove(answer);
-            await context.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "AnswerDeletionFailed",
-                Description = e.Message
-            });
-        }
-
-        return IdentityResult.Success;
+            .Where(q => q.LessonId == lessonId)
+            .ToListAsync();
+        return quizzes.Select(q => q.ToDto());
     }
 }
