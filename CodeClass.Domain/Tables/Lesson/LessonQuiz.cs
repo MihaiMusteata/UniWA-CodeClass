@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using CodeClass.Domain.Tables.Answer;
 
 namespace CodeClass.Domain.Tables.Lesson;
 

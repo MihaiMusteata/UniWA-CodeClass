@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using CodeClass.Domain.Tables.Lesson;
 
-namespace CodeClass.Domain.Tables.Lesson;
+namespace CodeClass.Domain.Tables.Answer;
 
 public class AnswerOption
 {

@@ -1,4 +1,5 @@
 using CodeClass.BusinessLogic.Models.LessonQuiz;
+using CodeClass.Domain.Tables.Answer;
 using CodeClass.Domain.Tables.Lesson;
 
 namespace CodeClass.BusinessLogic.Mapper.LessonQuizMapper;

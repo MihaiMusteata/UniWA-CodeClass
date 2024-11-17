@@ -1,3 +1,4 @@
+using CodeClass.Domain.Tables.Answer;
 using CodeClass.Domain.Tables.Course;
 using CodeClass.Domain.Tables.Document;
 using CodeClass.Domain.Tables.Enrollment;
