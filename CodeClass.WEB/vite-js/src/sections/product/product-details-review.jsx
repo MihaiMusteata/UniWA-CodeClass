@@ -1,48 +1,111 @@
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import LinearProgress from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
+import CardHeader from "@mui/material/CardHeader";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import Card from "@mui/material/Card";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import LinearProgress from "@mui/material/LinearProgress";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import {Iconify} from 'src/components/iconify';
 
-import { sumBy } from 'src/utils/helper';
-import { fShortenNumber } from 'src/utils/format-number';
-
-import { Iconify } from 'src/components/iconify';
-
-import { ProductReviewList } from './product-review-list';
-import { ProductReviewNewForm } from './product-review-new-form';
+import {Scrollbar} from "../../components/scrollbar";
+import {TableHeadCustom} from "../../components/table";
+import {Label} from "../../components/label";
 
 // ----------------------------------------------------------------------
 
-export function ProductDetailsReview({ enrolledStudents }) {
+const mockData = {
+  title: "Enrolled Students",
+  subheader: "Overview of student progress",
+  headLabel: [
+    {id: 'index', label: 'No.', align: 'left'},
+    {id: 'studentName', label: 'Student Name', align: 'left'},
+    {id: 'progress', label: 'Progress', align: 'center'},
+  ],
+  tableData: [
+    {studentName: "John Doe", progress: 82},
+    {studentName: "Jane Smith", progress: 100},
+    {studentName: "Alice Johnson", progress: 45},
+  ],
+};
 
-  const renderSummary = (
-    <Stack spacing={1} alignItems="center" justifyContent="center">
-      <Typography variant="subtitle2">Total enrolled students</Typography>
-
-      <Typography variant="h2">
-        {enrolledStudents}
-      </Typography>
-
-    </Stack>
-  );
+export function ProductDetailsReview() {
+  const {title, subheader, headLabel, tableData} = mockData;
 
   return (
-    <>
-      <Box
-        display="grid"
-        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
-        sx={{ py: { xs: 5, md: 0 } }}
-      >
-        {renderSummary}
+    <Card sx={{mt: 3}}>
+      <CardHeader title={title} subheader={subheader} sx={{mb: 3}}/>
+
+      <Scrollbar sx={{height: 700}}>
+        <Table>
+          <TableHeadCustom headLabel={headLabel}/>
+
+          <TableBody>
+            {tableData.map((row, index) => (
+              <RowItem key={index} index={index} row={row}/>
+            ))}
+          </TableBody>
+        </Table>
+      </Scrollbar>
+
+      <Divider sx={{borderStyle: 'dashed'}}/>
+
+      <Box sx={{p: 2, textAlign: 'right'}}>
+        <Button
+          size="small"
+          color="inherit"
+          endIcon={
+            <Iconify
+              icon="eva:arrow-ios-forward-fill"
+              width={18}
+              sx={{ml: -0.5}}
+            />
+          }
+        >
+          View all
+        </Button>
       </Box>
-
-      <Divider sx={{ borderStyle: 'dashed' }} />
-
-    </>
+    </Card>
   );
 }
+
+function RowItem({index, row}) {
+  return (
+    <TableRow sx={{m:10}}>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{row.studentName}</TableCell>
+      <TableCell>
+        <Stack
+          justifyContent="center"
+          sx={{typography: 'caption', color: 'text.secondary'}}
+        >{
+          row.progress === 100 ? <Label
+              variant="soft"
+              color="success"
+              sx={{mb: 1}}
+            >Completed</Label>
+            :
+            <LinearProgress
+              value={row.progress}
+              variant="determinate"
+              color={
+                row.progress < 30
+                  ? 'error'
+                  : row.progress < 70
+                    ? 'warning'
+                    : 'success'
+              }
+              sx={{mb: 1, width: 1, height: 6}}
+            />}
+          Student progress: {row.progress}%
+        </Stack>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+

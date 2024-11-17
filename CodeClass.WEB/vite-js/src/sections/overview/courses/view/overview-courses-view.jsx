@@ -1,10 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
 import Box from '@mui/material/Box';
-import {cardClasses} from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Grid from "@mui/material/Unstable_Grid2";
 
-import {CONFIG} from 'src/config-global';
 import {DashboardContent} from 'src/layouts/dashboard';
 import {useAuthContext} from 'src/auth/hooks';
 import axios from 'src/utils/axios';
