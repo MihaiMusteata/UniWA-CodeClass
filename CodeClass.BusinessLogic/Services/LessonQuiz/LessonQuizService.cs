@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CodeClass.BusinessLogic.Services.LessonQuiz;
 
-public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
+public class LessonQuizService(CodeClassDbContext context) : ILessonQuizService
 {
     public async Task<IEnumerable<LessonQuizDto>> GetAllAsync()
     {
@@ -29,9 +29,9 @@ public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
         {
             var lessonQuiz = await context.LessonQuizzes.AddAsync(newQuiz);
             await context.SaveChangesAsync();
-            
+
             var lessonQuizId = lessonQuiz.Entity.Id;
-            
+
             var answerOptions = dto.Answers.Select(a => a.ToEntity(lessonQuizId));
             await context.AnswerOptions.AddRangeAsync(answerOptions);
             await context.SaveChangesAsync();
@@ -116,5 +116,36 @@ public class LessonQuizService(CodeClassDbContext context)  : ILessonQuizService
             .Where(q => q.LessonId == lessonId)
             .ToListAsync();
         return quizzes.Select(q => q.ToDto());
+    }
+
+    public async Task<IdentityResult> AnswerQuestion(GivenAnswerDto answerData)
+    {
+        try
+        {
+            await context.AnswersGiven.AddRangeAsync(answerData.ToEntities());
+            await context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "AnswerFailed",
+                Description = e.Message
+            });
+        }
+
+        return IdentityResult.Success;
+    }
+
+
+    public async Task<IEnumerable<QuizAnswerDto>> GetMyAnswers(int lessonQuizId, string userId)
+    {
+        var answers = await context.AnswersGiven
+            .Include(a => a.AnswerOption)
+            .Where(a => a.LessonQuizId == lessonQuizId && a.UserId == userId)
+            .Select(a => a.AnswerOption.ToDto())
+            .ToListAsync();
+
+        return answers;
     }
 }

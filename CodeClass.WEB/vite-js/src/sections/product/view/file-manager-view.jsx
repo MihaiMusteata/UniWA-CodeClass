@@ -21,7 +21,7 @@ import axios from "../../../utils/axios";
 
 // ----------------------------------------------------------------------
 
-export function FileManagerView ({lessonId}) {
+export function FileManagerView({lessonId, userRole}) {
   const table = useTable({defaultRowsPerPage: 10});
   const [newDocumentUploaded, setNewDocumentUploaded] = useState(false);
 
@@ -104,19 +104,22 @@ export function FileManagerView ({lessonId}) {
 
   useEffect(() => {
     getLessonDocuments();
-  }, [ newDocumentUploaded, getLessonDocuments]);
+  }, [newDocumentUploaded, getLessonDocuments]);
 
   return (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{mb:2}}>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-          onClick={upload.onTrue}
-        >
-          Upload
-        </Button>
-      </Stack>
+      {
+        userRole === 'teacher' && (
+          <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{mb: 2}}>
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:cloud-upload-fill"/>}
+              onClick={upload.onTrue}
+            >
+              Upload
+            </Button>
+          </Stack>
+        )}
 
       {notFound ? (
         <EmptyContent filled sx={{py: 10}}/>
@@ -131,7 +134,7 @@ export function FileManagerView ({lessonId}) {
         </>
       )}
 
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} lessonId={lessonId} onNewDocumentUploaded={handleNewDocumentUploaded} />
+      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} lessonId={lessonId} onNewDocumentUploaded={handleNewDocumentUploaded}/>
 
       <ConfirmDialog
         open={confirm.value}

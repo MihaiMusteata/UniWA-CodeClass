@@ -9,4 +9,5 @@ public interface ILessonService : ICrudService<LessonDto>
 {   
     Task<IEnumerable<DocumentDto>> GetAllLessonDocuments(int lessonId);
     Task<int> AttachDocumentToLesson(int lessonId, DocumentDto document);
+    Task<float> GetFinalGrade(int lessonId, string userId);
 }

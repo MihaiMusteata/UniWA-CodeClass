@@ -138,7 +138,9 @@ public class LessonService(CodeClassDbContext context, IConfiguration configurat
             await _context.SaveChangesAsync();
             document.FolderPath = Path.Combine(_env.ContentRootPath, "Uploads", documentId.ToString());
             Directory.CreateDirectory(document.FolderPath);
-            await using var fs = new FileStream(Path.Combine(document.FolderPath, $"{document.Name}{document.Extension}"), FileMode.Create);
+            await using var fs =
+                new FileStream(Path.Combine(document.FolderPath, $"{document.Name}{document.Extension}"),
+                    FileMode.Create);
             await fs.WriteAsync(document.Content);
             return documentId;
         }
@@ -146,5 +148,69 @@ public class LessonService(CodeClassDbContext context, IConfiguration configurat
         {
             throw new Exception("An error occurred while attaching the document to the lesson", e);
         }
+    }
+
+    public async Task<float> GetFinalGrade(int lessonId, string userId)
+    {
+        // Obține toate chestionarele asociate lecției
+        var lessonQuizzes = await _context.LessonQuizzes
+            .Include(q => q.AnswerOptions)
+            .Where(q => q.LessonId == lessonId)
+            .ToListAsync();
+
+        // Obține toate răspunsurile date de utilizator pentru lecție
+        var userAnswers = await _context.AnswersGiven
+            .Include(a => a.AnswerOption)
+            .Where(a => a.UserId == userId && a.AnswerOption.LessonQuiz.LessonId == lessonId)
+            .ToListAsync();
+
+        // Variabile pentru punctaj total și numărul de întrebări
+        float totalPoints = 0;
+        int totalQuestions = lessonQuizzes.Count;
+        int totalQuestionsAnswered = userAnswers.Select(ans => ans.AnswerOption.LessonQuizId).Distinct().Count();
+
+        foreach (var quiz in lessonQuizzes)
+        {
+            // Obține răspunsurile corecte pentru întrebare
+            var correctAnswers = quiz.AnswerOptions.Where(opt => opt.IsCorrect).ToList();
+            int correctAnswerCount = correctAnswers.Count;
+
+            // Obține răspunsurile selectate de utilizator pentru întrebare
+            var selectedAnswers = userAnswers
+                .Where(ans => ans.AnswerOption.LessonQuizId == quiz.Id)
+                .Select(ans => ans.AnswerOption)
+                .ToList();
+
+            int selectedCorrect = selectedAnswers.Count(opt => opt.IsCorrect);
+            int selectedIncorrect = selectedAnswers.Count(opt => !opt.IsCorrect);
+
+            // Calcul punctaj pentru această întrebare
+            float questionPoints = 0;
+
+            if (selectedIncorrect == 0)
+            {
+                // Dacă nu există răspunsuri greșite
+                questionPoints = (float)selectedCorrect / correctAnswerCount;
+            }
+            else
+            {
+                // Dacă există răspunsuri greșite, scad punctele corespunzătoare
+                questionPoints = Math.Max(0,
+                    (float)selectedCorrect / correctAnswerCount - (float)selectedIncorrect / correctAnswerCount);
+            }
+
+            totalPoints += questionPoints;
+        }
+
+        // Calculul notei finale
+        float maxPoints = totalQuestions; // Fiecare întrebare valorează 1 punct
+        float finalGrade = (totalPoints / maxPoints) * 10; // Nota pe o scală de 10
+        
+        if (totalQuestions == totalQuestionsAnswered)
+        {
+            return finalGrade;
+        }
+
+        return -1;
     }
 }

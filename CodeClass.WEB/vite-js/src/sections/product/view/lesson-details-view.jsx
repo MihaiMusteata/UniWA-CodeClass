@@ -11,6 +11,7 @@ import {ArrowButton} from "../../../components/carousel/index";
 import {Markdown} from "../../../components/markdown/index";
 import {FileManagerView} from "./file-manager-view";
 import {LessonQuizzesView} from "./lesson-quizzes-view";
+import {useAuthContext} from "../../../auth/hooks";
 
 const lessonDataSchema = zod.object({
   name: zod.string().min(1, {message: 'Name is required!'}),
@@ -23,6 +24,7 @@ const LessonDetails = ({courseId}) => {
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newLessonAdded, setNewLessonAdded] = useState(false);
+  const { user } = useAuthContext();
 
   const defaultValues = {
     name: '',
@@ -91,8 +93,11 @@ const LessonDetails = ({courseId}) => {
           onClick={handlePrev}
         />
 
-        <Button variant="contained" onClick={handleNext}>
-          {currentLessonIndex < lessonsData.length - 1 ? 'Next' : 'Add New Lesson'}
+        <Button variant="contained" onClick={handleNext} disabled={currentLessonIndex === lessonsData.length - 1 && user.role !== 'teacher'}>
+          {
+            currentLessonIndex < lessonsData.length - 1 ? 'Next' :
+              user.role === 'teacher' ? 'Add New Lesson' : 'No more lessons'
+          }
         </Button>
 
         <ArrowButton
@@ -129,7 +134,7 @@ const LessonDetails = ({courseId}) => {
                 </Box>
                 <Divider sx={{marginY: 2}}/>
 
-                <FileManagerView lessonId={lessonsData[currentLessonIndex]?.id}/>
+                <FileManagerView lessonId={lessonsData[currentLessonIndex]?.id} userRole={user.role}/>
               </Card>
 
               <Divider sx={{marginY: 2}}/>

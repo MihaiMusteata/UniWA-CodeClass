@@ -1,59 +1,79 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
+import {Alert} from "@mui/material";
 import axios from 'src/utils/axios';
-import { QuizAccordion } from '../quiz-accordion';
-import { QuizForm } from '../quiz-form';
-const initialData = [
-  {
-    id: 1,
-    heading: 'What is the capital of France?',
-    question: 'What is the capital of France?',
-    options: [
-      { option: 'Paris', isCorrect: true },
-      { option: 'Berlin', isCorrect: false },
-      { option: 'Madrid', isCorrect: false },
-    ],
-  },
-  {
-    id: 2,
-    heading: 'What is 2 + 2?',
-    question: 'What is 2 + 2?',
-    options: [
-      { option: '3', isCorrect: false },
-      { option: '4', isCorrect: true },
-      { option: '5', isCorrect: false },
-    ],
-  },
-];
+import {QuizAccordion} from '../quiz-accordion';
+import {QuizForm} from '../quiz-form';
+import {useAuthContext} from "../../../auth/hooks";
 
 export function LessonQuizzesView({lessonId}) {
   const [quizzes, setQuizzes] = useState([]);
-
-  const handleAddQuiz = (newQuiz) => {
+  const [newQuizAdded, setNewQuizAdded] = useState(false);
+  const [finalGrade, setFinalGrade] = useState(-1.0);
+  const [newAnswerAdded, setNewAnswerAdded] = useState(false);
+  const {user} = useAuthContext();
+  const handleAddQuiz = async (newQuiz) => {
     newQuiz.lessonId = lessonId;
-    console.log(newQuiz);
+    try {
+      await axios.post(`/api/lesson-quiz/create`, newQuiz);
+      setNewQuizAdded(!newQuizAdded);
+    } catch (e) {
+      console.log(`Error: ${e}`);
+    }
   };
+
+  const handleAddAnswer = () => {
+    setNewAnswerAdded(!newAnswerAdded);
+  }
+
+  const getMyFinalGrade = useCallback(async () => {
+    try {
+      const res = await axios.get(`/api/lesson/${lessonId}/my-grade?userId=${user.id}`);
+      setFinalGrade(res.data);
+    } catch (e) {
+      console.log(`Error: ${e}`);
+    }
+  }, [lessonId, user.id, newAnswerAdded]);
 
   const getLessonQuizzes = useCallback(async () => {
     try {
       const res = await axios.get(`/api/lesson-quiz/${lessonId}/quizzes`);
       setQuizzes(res.data);
     } catch (e) {
-      console.log(`Error : {e}`);
+      console.log(`Error: ${e}`);
     }
   }, [lessonId]);
 
+
   useEffect(() => {
     getLessonQuizzes();
-  }, [getLessonQuizzes]);
+  }, [newQuizAdded, getLessonQuizzes]);
+
+  useEffect(() => {
+    if (user.role === 'student') {
+      getMyFinalGrade();
+    }
+  }, [newAnswerAdded, getMyFinalGrade, user.role]);
 
   return (
     <Box>
       {quizzes.map((quiz, index) => (
-        <QuizAccordion key={quiz.id} quiz={quiz} index={index} />
+        <QuizAccordion key={quiz.id} quiz={quiz} index={index} userRole={user.role} userId={user.id}  onAddAnswer={handleAddAnswer}/>
       ))}
 
-      <QuizForm onAddQuiz={handleAddQuiz} />
+      {user.role === 'teacher' && (
+        <QuizForm onAddQuiz={handleAddQuiz}/>
+      )}
+
+      {user.role === 'student' && (
+        finalGrade === -1.0 ? (
+            <Alert severity="info">You can only see your grade after you answer all the quizzes</Alert>)
+          :
+          (
+
+            <Alert severity="success">Your final grade is {finalGrade}</Alert>
+          )
+      )}
     </Box>
   );
 }

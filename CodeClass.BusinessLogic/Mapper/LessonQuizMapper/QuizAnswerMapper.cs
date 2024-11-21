@@ -10,6 +10,7 @@ public static class QuizAnswerMapper
     {
         return new QuizAnswerDto
         {
+            Id = entity.Id,
             OptionText = entity.OptionText,
             IsCorrect = entity.IsCorrect,
         };

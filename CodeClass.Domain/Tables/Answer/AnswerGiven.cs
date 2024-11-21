@@ -12,7 +12,7 @@ public class AnswerGiven
     [ForeignKey("AnswerOptionId")]
     public int AnswerOptionId { get; set; }
     [ForeignKey("UserId")]
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     
     public virtual AnswerOption AnswerOption { get; set; }
     public virtual LessonQuiz LessonQuiz { get; set; }

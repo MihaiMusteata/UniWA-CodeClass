@@ -27,6 +27,7 @@ public class CodeClassDbContext : IdentityDbContext<UserData>
     public DbSet<LessonResource> LessonResources { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
     public DbSet<AnswerOption> AnswerOptions { get; set; }
+    public DbSet<AnswerGiven> AnswersGiven { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -79,5 +80,23 @@ public class CodeClassDbContext : IdentityDbContext<UserData>
             .WithMany(q => q.AnswerOptions)
             .HasForeignKey(a => a.LessonQuizId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<AnswerGiven>()
+            .HasOne(a => a.LessonQuiz)
+            .WithMany()
+            .HasForeignKey(a => a.LessonQuizId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<AnswerGiven>()
+            .HasOne(a => a.AnswerOption)
+            .WithMany()
+            .HasForeignKey(a => a.AnswerOptionId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<AnswerGiven>()
+            .HasOne(a => a.User)
+            .WithMany()
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -112,7 +112,6 @@ export function QuizForm({onAddQuiz}) {
         </Button>
       </Box>
 
-      {/* Question Input */}
       <Controller
         name="question"
         control={control}

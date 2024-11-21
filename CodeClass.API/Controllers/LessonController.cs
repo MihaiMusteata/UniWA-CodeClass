@@ -36,4 +36,10 @@ public class LessonController: BaseCrudController<LessonDto>
         var documentId = await _lessonService.AttachDocumentToLesson(lessonId, document);
         return Ok(documentId);
     }
+    
+    [HttpGet("{lessonId}/my-grade")]
+    public async Task<float> GetFinalGradeAsync(int lessonId, string userId)
+    {
+        return await _lessonService.GetFinalGrade(lessonId, userId);
+    }
 }
