@@ -13,7 +13,7 @@ const FORMAT_ILLUSTRATOR = ['ai', 'esp'];
 const FORMAT_POWERPOINT = ['ppt', 'pptx'];
 const FORMAT_AUDIO = ['wav', 'aif', 'mp3', 'aac'];
 const FORMAT_IMG = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp'];
-const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
+const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm', 'mov'];
 
 const iconUrl = (icon) => `${CONFIG.assetsDir}/assets/icons/files/${icon}.svg`;
 

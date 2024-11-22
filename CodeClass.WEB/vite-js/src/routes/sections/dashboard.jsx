@@ -7,6 +7,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AuthGuard } from 'src/auth/guard';
+import {CourseAnalyticsView} from "../../sections/product/view/course-analytics-view";
 
 // ----------------------------------------------------------------------
 
@@ -108,6 +109,7 @@ export const dashboardRoutes = [
           { element: <ProductListPage />, index: true },
           { path: 'list', element: <ProductListPage /> },
           { path: ':id', element: <ProductDetailsPage /> },
+          { path: ':id/analytics', element: <CourseAnalyticsView /> },
           { path: 'new', element: <ProductCreatePage /> },
           { path: ':id/edit', element: <ProductEditPage /> },
         ],

@@ -43,7 +43,7 @@ export function ChartSemiCircleGauge({ chart }) {
           name: { offsetY: 8 },
           value: { offsetY: -40 },
           total: {
-            label: `Used of ${fData(24 * 1024 * 1024)} / ${fData(50 * 1024 * 1024)}`,
+            label: `Your total progress for this course`,
             color: theme.vars.palette.text.disabled,
             fontSize: theme.typography.caption.fontSize,
             fontWeight: theme.typography.caption.fontWeight,

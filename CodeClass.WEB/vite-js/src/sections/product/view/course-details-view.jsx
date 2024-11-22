@@ -1,5 +1,4 @@
-import {useState, useEffect, useCallback} from 'react';
-
+import {useNavigate} from 'react-router-dom';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -23,6 +22,8 @@ import {ProductDetailsReview} from '../product-details-review';
 import {ProductDetailsToolbar} from '../product-details-toolbar';
 import {useAuthContext} from "../../../auth/hooks/index";
 import LessonDetails from "./lesson-details-view";
+import {SvgColor} from "../../../components/svg-color";
+import {CONFIG} from "../../../config-global";
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ import LessonDetails from "./lesson-details-view";
 
 export function CourseDetailsView({course, error, loading}) {
   const tabs = useTabs('lessons');
+  const navigate = useNavigate();
   const {user} = useAuthContext();
   if (loading) {
     return (
@@ -74,14 +76,29 @@ export function CourseDetailsView({course, error, loading}) {
         liveLink={paths.product.details(`${course?.id}`)}
       />
 
-      <Box sx={{mb: 2}}>
-        <Typography variant="h4" sx={{mb: 1}}>
-          Hey {user.displayName} 👋
-        </Typography>
-        <Typography
-          sx={{color: 'text.secondary'}}
-        >Here is the details for the course: {course.name}</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', mb: 2 }}>
+        <div>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            Hey {user.displayName} 👋
+          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>
+            Here is the details for the course: {course.name}
+          </Typography>
+        </div>
+
+        <Button
+          variant="soft"
+          color="secondary"
+          sx={{ alignSelf: 'stretch', px:3 }}
+          startIcon={
+            <SvgColor src={`${CONFIG.assetsDir}/assets/icons/navbar/ic-analytics.svg`} />
+          }
+          onClick={() => navigate(`/dashboard/product/${course.id}/analytics`)}
+        >
+          Analytics
+        </Button>
       </Box>
+
 
       <Card>
         <Tabs
