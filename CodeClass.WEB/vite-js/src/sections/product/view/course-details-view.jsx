@@ -76,7 +76,7 @@ export function CourseDetailsView({course, error, loading}) {
 
       <Box sx={{mb: 2}}>
         <Typography variant="h4" sx={{mb: 1}}>
-          Hey professor, {user.displayName} 👋
+          Hey {user.displayName} 👋
         </Typography>
         <Typography
           sx={{color: 'text.secondary'}}
@@ -95,7 +95,7 @@ export function CourseDetailsView({course, error, loading}) {
         >
           {[
             {value: 'lessons', label: 'Lessons'},
-            {value: 'enrolledStudents', label: `Enrolled students (${course?.enrolledStudents})`},
+            user.role === 'teacher' && {value: 'enrolledStudents', label: `Enrolled students (${course?.enrolledStudents})`},
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label}/>
           ))}

@@ -134,17 +134,8 @@ export function DashboardLayout({ sx, children, header, data }) {
             ),
             rightArea: (
               <Box display="flex" alignItems="center" gap={{ xs: 0, sm: 0.75 }}>
-                {/* -- Searchbar -- */}
-                <Searchbar data={navData} />
-                {/* -- Language popover -- */}
-                <LanguagePopover data={allLangs} />
-                {/* -- Notifications popover -- */}
-                <NotificationsDrawer data={_notifications} />
-                {/* -- Contacts popover -- */}
-                <ContactsPopover data={_contacts} />
-                {/* -- Settings button -- */}
+
                 <SettingsButton />
-                {/* -- Account drawer -- */}
                 <AccountDrawer data={_account} />
               </Box>
             ),

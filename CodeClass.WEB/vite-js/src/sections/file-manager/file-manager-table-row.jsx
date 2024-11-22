@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import {useState, useCallback} from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -7,42 +7,46 @@ import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
-import TableRow, { tableRowClasses } from '@mui/material/TableRow';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
+import TableRow, {tableRowClasses} from '@mui/material/TableRow';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+import AvatarGroup, {avatarGroupClasses} from '@mui/material/AvatarGroup';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useDoubleClick } from 'src/hooks/use-double-click';
-import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
+import {useBoolean} from 'src/hooks/use-boolean';
+import {useDoubleClick} from 'src/hooks/use-double-click';
+import {useCopyToClipboard} from 'src/hooks/use-copy-to-clipboard';
 
-import { fData } from 'src/utils/format-number';
-import { fDate, fTime } from 'src/utils/format-time';
+import {fData} from 'src/utils/format-number';
+import {fDate, fTime} from 'src/utils/format-time';
 
-import { varAlpha } from 'src/theme/styles';
+import {varAlpha} from 'src/theme/styles';
 
-import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { FileThumbnail } from 'src/components/file-thumbnail';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import {toast} from 'src/components/snackbar';
+import {Iconify} from 'src/components/iconify';
+import {ConfirmDialog} from 'src/components/custom-dialog';
+import {FileThumbnail} from 'src/components/file-thumbnail';
+import {usePopover, CustomPopover} from 'src/components/custom-popover';
 
-import { FileManagerShareDialog } from './file-manager-share-dialog';
-import { FileManagerFileDetails } from './file-manager-file-details';
+import {FileManagerShareDialog} from './file-manager-share-dialog';
+import {FileManagerFileDetails} from './file-manager-file-details';
+import {DocumentPreview} from "../product/document-preview";
+import {useAuthContext} from "../../auth/hooks";
 
 // ----------------------------------------------------------------------
 
-export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow }) {
+export function FileManagerTableRow({row, selected, onSelectRow, onDeleteRow}) {
   const theme = useTheme();
 
-  const { copy } = useCopyToClipboard();
+  const {copy} = useCopyToClipboard();
+
+  const {user} = useAuthContext();
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const favorite = useBoolean(row.isFavorited);
+  const documentDialog = useBoolean();
 
   const details = useBoolean();
 
@@ -95,10 +99,10 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
             transition: theme.transitions.create(['background-color', 'box-shadow'], {
               duration: theme.transitions.duration.shortest,
             }),
-            '&:hover': { backgroundColor: 'background.paper', boxShadow: theme.customShadows.z20 },
+            '&:hover': {backgroundColor: 'background.paper', boxShadow: theme.customShadows.z20},
           },
-          [`& .${tableCellClasses.root}`]: { ...defaultStyles },
-          ...(details.value && { [`& .${tableCellClasses.root}`]: { ...defaultStyles } }),
+          [`& .${tableCellClasses.root}`]: {...defaultStyles},
+          ...(details.value && {[`& .${tableCellClasses.root}`]: {...defaultStyles}}),
         }}
       >
         <TableCell padding="checkbox">
@@ -106,13 +110,13 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
             checked={selected}
             onDoubleClick={() => console.info('ON DOUBLE CLICK')}
             onClick={onSelectRow}
-            inputProps={{ id: `row-checkbox-${row.id}`, 'aria-label': `row-checkbox` }}
+            inputProps={{id: `row-checkbox-${row.id}`, 'aria-label': `row-checkbox`}}
           />
         </TableCell>
 
         <TableCell onClick={handleClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <FileThumbnail file={row.type} />
+            <FileThumbnail file={row.type}/>
 
             <Typography
               noWrap
@@ -120,7 +124,7 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
               sx={{
                 maxWidth: 360,
                 cursor: 'pointer',
-                ...(details.value && { fontWeight: 'fontWeightBold' }),
+                ...(details.value && {fontWeight: 'fontWeightBold'}),
               }}
             >
               {row.name}
@@ -128,9 +132,9 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </Stack>
         </TableCell>
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell align="right" sx={{px: 1, whiteSpace: 'nowrap'}}>
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
+            <Iconify icon="eva:more-vertical-fill"/>
           </IconButton>
         </TableCell>
       </TableRow>
@@ -139,41 +143,36 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
         open={popover.open}
         anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        slotProps={{ arrow: { placement: 'right-top' } }}
+        slotProps={{arrow: {placement: 'right-top'}}}
       >
         <MenuList>
           <MenuItem
             onClick={() => {
-              popover.onClose();
-              handleCopy();
+              documentDialog.onTrue();
             }}
           >
-            <Iconify icon="eva:link-2-fill" />
-            Copy Link
+            <Iconify icon="eva:eye-fill"/>
+            Open for preview
           </MenuItem>
 
-          <MenuItem
-            onClick={() => {
-              popover.onClose();
-              share.onTrue();
-            }}
-          >
-            <Iconify icon="solar:share-bold" />
-            Share
-          </MenuItem>
+          {
+            user.role === "teacher" && (
+              <>
+                <Divider sx={{borderStyle: 'dashed'}}/>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
-
-          <MenuItem
-            onClick={() => {
-              confirm.onTrue();
-              popover.onClose();
-            }}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    confirm.onTrue();
+                    popover.onClose();
+                  }}
+                  sx={{color: 'error.main'}}
+                >
+                  <Iconify icon="solar:trash-bin-trash-bold"/>
+                  Delete
+                </MenuItem>
+              </>
+            )
+          }
         </MenuList>
       </CustomPopover>
 
@@ -200,6 +199,8 @@ export function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow })
           </Button>
         }
       />
+
+      <DocumentPreview dialog={documentDialog} fileExtension={row.type} folder={row.id} fileName={row.name}/>
     </>
   );
 }
