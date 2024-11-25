@@ -8,10 +8,10 @@ export function ChartColumnStacked({ chart }) {
   const theme = useTheme();
 
   const chartColors = chart.colors ?? [
-    hexAlpha(theme.palette.primary.dark, 0.8),
+    theme.palette.success.main,
     theme.palette.warning.main,
-    theme.palette.info.main,
     theme.palette.error.main,
+    theme.palette.grey[700],
   ];
 
   const chartOptions = useChart({
@@ -24,7 +24,7 @@ export function ChartColumnStacked({ chart }) {
       itemMargin: { vertical: 8 },
     },
     xaxis: {
-      type: 'datetime',
+      type: 'text',
       categories: chart.categories,
     },
     plotOptions: { bar: { columnWidth: '36%' } },

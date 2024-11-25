@@ -83,7 +83,7 @@ public class CodeClassDbContext : IdentityDbContext<UserData>
         
         modelBuilder.Entity<AnswerGiven>()
             .HasOne(a => a.LessonQuiz)
-            .WithMany()
+            .WithMany(q => q.AnswersGiven)
             .HasForeignKey(a => a.LessonQuizId)
             .OnDelete(DeleteBehavior.NoAction);
 

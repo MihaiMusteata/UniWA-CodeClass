@@ -15,7 +15,7 @@ export function ChartColumnSingle({ chart }) {
     xaxis: { categories: chart.categories },
     tooltip: {
       y: {
-        formatter: (value) => `${value} thousands`,
+        formatter: (value) => `Final grade ${value}`,
         title: { formatter: () => '' },
       },
     },

@@ -11,4 +11,5 @@ public interface ICourseService : ICrudService<CourseDto>
     Task<IEnumerable<LessonDto>> GetCourseLessonsAsync(int courseId);
     Task<IdentityResult> EnrollStudentAsync(string studentId, int courseId);
     Task<IEnumerable<CoursePreviewDto>> GetStudentCoursesAsync(string studentId);
+    Task<CourseProgressData> GetCourseProgress(int courseId, string userId);
 }

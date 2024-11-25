@@ -12,4 +12,5 @@ public class LessonQuiz
     
     public virtual LessonData Lesson { get; set; }
     public virtual ICollection<AnswerOption> AnswerOptions { get; set; }
+    public virtual ICollection<AnswerGiven> AnswersGiven { get; set; }
 }

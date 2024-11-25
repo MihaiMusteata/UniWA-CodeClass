@@ -46,4 +46,10 @@ public class CourseController : BaseCrudController<CourseDto>
         var courses = await _courseService.GetStudentCoursesAsync(studentId);
         return courses;
     }
+    
+    [HttpGet("{courseId}/analytics")]
+    public async Task<CourseProgressData> GetCourseProgressAsync(int courseId, string userId)
+    {
+        return await _courseService.GetCourseProgress(courseId, userId);
+    }
 }

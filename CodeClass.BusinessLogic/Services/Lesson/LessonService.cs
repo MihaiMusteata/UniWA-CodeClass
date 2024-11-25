@@ -206,7 +206,7 @@ public class LessonService(CodeClassDbContext context, IConfiguration configurat
         float maxPoints = totalQuestions; // Fiecare întrebare valorează 1 punct
         float finalGrade = (totalPoints / maxPoints) * 10; // Nota pe o scală de 10
         
-        if (totalQuestions == totalQuestionsAnswered)
+        if (totalQuestions == totalQuestionsAnswered && maxPoints > 0)
         {
             return finalGrade;
         }
